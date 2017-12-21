@@ -110,8 +110,8 @@ This is one use of the Android lifecycle methods, `onCreate`.
 ``` Java
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Map<String, Object> properties = ...
-    amp.observe("AmpActivity", properties);
+    Map<String, Object> properties = new HashMap<>();
+    properties.put("name", "<name of the activity>");
 }
 ```
 #### I want to track button taps
@@ -120,8 +120,9 @@ Button clickButton = findViewById(R.id.button);
 clickButton.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        Map<String, Object> properties = ...
-        amp.observe("ButtonClick", properties);
+        String buttonText = ((Button)v).getText().toString();
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("value", buttonText);
     }
 });
 ```
@@ -134,7 +135,8 @@ SearchView searchView = findViewById(R.id.search);
 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Map<String, Object> properties  = ...
+        Map<String, Object> properties  = new HashMap<>();
+        properties.put("value", query);
         amp.observe("Search", properties);
         return true;
     }
@@ -148,7 +150,7 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 #### I want to select tab using amp
 
 ``` Java
-// Chose a tab that will suit current customer
+// Choose a tab that will suit current customer
 Map<String, Object> decision = amp.decide(KEY_TAB, getTabCandidates());
 String selectedTab = (String) decision.get(KEY_TAB);
 
