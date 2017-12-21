@@ -5,7 +5,7 @@
 Android Client for Amp.ai.
 
 ## Amp.ai
-Amp.ai is a cloud AI platform that can enhance any software application that integrates with it  by making intelligent, goal-driven, context-sensitive decisions. Think of it as A/B testing on steroids.  While A/B testing provides information about what choice to take across all users, Amp.ai will provide you with decision that is specific to a context and will continue to improve and provide your users with the best decision based on the context they are in.
+Amp.ai is a cloud AI platform that can enhance any software application that integrates with it  by making intelligent, goal-driven, context-sensitive decisions. Think of it as A/B testing on steroids.  While A/B testing provides information about what choice to take across all users, Amp.ai will provide you with a decision that is specific to a context and will continue to improve and provide your users with the best decision based on the context they are in.
 
 ## Compatibility
 The Amp framework supports Android API level 14 and above and requires compatibility with Java 7.
@@ -65,7 +65,7 @@ In your AndroidManifest.xml:
 ``` Manifest
 <application android:name="com.yourapp.MyApplication"/>
 ```
-These lines initialize the amp and session instances that represents a single session in the Amp project corresponding to the `projectKey` that will be given to you. In the above example, we make the assumption that an user session is from when they the app is created.  How you define an user session is completely up to you.  It may be that you define it by the time they enter the application to 30 minutes.
+These lines initialize the amp and session instances that represent a single session in the Amp project corresponding to the `projectKey` that will be given to you. In the above example, we make the assumption that an user session is from when the app is created.  How you define an user session is completely up to you.  It may be that you define it by the time they enter the application to 30 minutes.
 
 ### Observe
 ``` Java
@@ -100,7 +100,7 @@ By default, when using the amp-android client, we will observe general session i
 |.sessionTTL|0|Milliseconds|Session time to live|
 
 ## Usage
-There are many ways in which you will want to use Amp.  You may want to track how often each Activity is typically visited in your application or how far down a scrollable view your user scrolls.  If your application requires sign up and registration, you may want to track the number of taps on the sign up button because you may want to increase your user's sign up rate using Amp.  The possibilities are endless, and with Amp, not only will it track whatever you ask of it, it will also check the context in which these events occurred.  With this information, Amp will make the best decisions to improve on whatever business goals you have.
+There are many ways in which you will want to use Amp.  You may want to track how often each Activity is typically visited in your application or how far down a scrollable view your user scrolls.  If your application requires sign up and registration, you may want to track the number of taps on the sign up button because you may want to increase your user's sign up rate using Amp.  The possibilities are endless, and with Amp, not only will it track whatever you ask of it, it will also check the context in which these events occurred.  With this information, Amp will make the best decisions to improve upon whatever business goals you have.
 Below are just a few examples on how you might make `observe` and `decide` requests in your application.
 
 ### Observe Usages
@@ -148,7 +148,7 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 #### I want to select tab using amp
 
 ``` Java
-// Chose a tab that will suite current customer
+// Chose a tab that will suit current customer
 Map<String, Object> decision = amp.decide(KEY_TAB, getTabCandidates());
 String selectedTab = (String) decision.get(KEY_TAB);
 
