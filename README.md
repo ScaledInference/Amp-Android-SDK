@@ -29,7 +29,7 @@ allprojects {
 ### Add the dependency
 ``` Gradle
 dependencies {
-    compile 'com.github.ScaledInference:amp-android:1.0.1'
+    compile 'com.github.ScaledInference:amp-android:1.0.2'
 }
 ```
 
@@ -44,7 +44,7 @@ dependencies {
 To use amp, import the Amp framework and create an amp instance with this class. Here is an example of initializing Amp in your `Application`:
 
 ``` Java
-import com.scaledinference.amp.Amp;
+import amp.core.Amp;
 
 public class MyApplication extends Application {
     private Amp mAmp;
@@ -88,6 +88,27 @@ Map<String, Object> decision = amp.decide("CheckoutButtonStyle", candidates);
 ```
 Learning to make decisions to improve your metric is the key value Amp provides.  Simply list the candidates, e.g. the style of the button, that are likely to make a difference for your metric, and Amp will help you learn from your data and make the best decision!
 
+### LoadRules
+Use this when you need to ensure that decisions made through `Amp#decide()` are made based on the rules provided by the server. A common use case is when a one-time decision must be made on start of the application. If the rules are already available, the callback will be called immediately from this method. If the rules are not ready, it will wait for the sync to complete and callback will be executed.
+
+
+``` Java
+// Show a dialog when operation is performed on the background thread
+dialog.show();
+
+amp.loadRules(timeout, new CoreAmp.CompletionListener() {
+    @Override
+    public void onCompleted(Throwable throwable) {
+        // The callback is executed on the main thread, so it's safe to change the UI
+        dialog.dismiss();
+
+        // Chose a tab that will suite current customer
+        Map<String, Object> decision = amp.decide(KEY_TAB, getTabCandidates());
+        ....
+    }
+});
+```
+
 ### Builtin Events
 By default, when using the amp-android client, we will observe general session information on the `AmpSession` event.
 
@@ -97,7 +118,7 @@ By default, when using the amp-android client, we will observe general session i
 |----|:-----------:|:-------:|-------|
 |.logLevel|.WARN|LogLevel|.DEBUG, .WARN|
 |.builtinEvents|[String]|Array|Events that are created upon initialization|
-|.sessionTTL|0|Milliseconds|Session time to live|
+|.sessionTTL|0|Long|Session time to live in milliseconds|
 
 ## Usage
 There are many ways in which you will want to use Amp.  You may want to track how often each Activity is typically visited in your application or how far down a scrollable view your user scrolls.  If your application requires sign up and registration, you may want to track the number of taps on the sign up button because you may want to increase your user's sign up rate using Amp.  The possibilities are endless, and with Amp, not only will it track whatever you ask of it, it will also check the context in which these events occurred.  With this information, Amp will make the best decisions to improve upon whatever business goals you have.
@@ -112,6 +133,7 @@ protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Map<String, Object> properties = new HashMap<>();
     properties.put("name", "<name of the activity>");
+    amp.observe("AmpActivity", properties);
 }
 ```
 #### I want to track button taps
@@ -123,6 +145,7 @@ clickButton.setOnClickListener(new View.OnClickListener() {
         String buttonText = ((Button)v).getText().toString();
         Map<String, Object> properties = new HashMap<>();
         properties.put("value", buttonText);
+        amp.observe("ButtonClick", properties);
     }
 });
 ```
@@ -161,3 +184,26 @@ if (FIRST_TAB.equals(selectedTab)) {
     mNavigation.setSelectedItemId(R.id.second_tab);
 }
 ```
+
+ProGuard
+--------
+If you are using ProGuard you need to add the following options:
+```
+# OkHttp
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+# Retrofit
+-keepattributes Signature
+-keepclassmembernames,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+```
+Or you can check for the most recent versions of ProGuard config for [OkHttp][1] and [Retrofit][2].
+
+
+ [1]: https://github.com/square/okhttp#proguard
+ [2]: https://github.com/square/retrofit#proguard
