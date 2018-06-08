@@ -29,7 +29,7 @@ allprojects {
 ### Add the dependency
 ``` Gradle
 dependencies {
-    compile 'com.github.ScaledInference:amp-android:1.0.5'
+    compile 'com.github.ScaledInference:amp-android:1.0.7'
 }
 ```
 
@@ -201,9 +201,22 @@ If you are using ProGuard you need to add the following options:
     @retrofit2.http.* <methods>;
 }
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+# Serializable
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable { 
+    static final long serialVersionUID; 
+    private static final java.io.ObjectStreamField[] serialPersistentFields; 
+    !static !transient <fields>; 
+    private void writeObject(java.io.ObjectOutputStream); 
+    private void readObject(java.io.ObjectInputStream); 
+    java.lang.Object writeReplace(); 
+    java.lang.Object readResolve(); 
+}
 ```
 Or you can check for the most recent versions of ProGuard config for [OkHttp][1] and [Retrofit][2].
+More details about using Proguard with Serializable [here][3].
 
 
  [1]: https://github.com/square/okhttp#proguard
  [2]: https://github.com/square/retrofit#proguard
+ [3]: https://www.guardsquare.com/en/proguard/manual/examples#serializable
