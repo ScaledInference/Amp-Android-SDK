@@ -65,7 +65,7 @@ In your AndroidManifest.xml:
 ``` Manifest
 <application android:name="com.yourapp.MyApplication"/>
 ```
-These lines initialize the amp and session instances that represent a single session in the Amp project corresponding to the `projectKey` that will be given to you. In the above example, we make the assumption that an user session is from when the app is created.  How you define an user session is completely up to you.  It may be that you define it by the time they enter the application to 30 minutes.
+These lines initialize the amp and session instances that represent a single session in the Amp project corresponding to the `projectKey` that will be given to you. How to define a user session is completely up to you. The default behavior is to end the session after inactivity period (the app in background state and no events were fired) becomes more than `sessionTTL`, or time interval since session creation is more than `sessionLifetime`.
 
 ### Observe
 ``` Java
@@ -116,9 +116,10 @@ By default, when using the amp-android client, we will observe general session i
 
 |Name|Default Value|Data Type|Details|
 |----|:-----------:|:-------:|-------|
-|.logLevel|.WARN|LogLevel|.DEBUG, .WARN|
-|.builtinEvents|[String]|Array|Events that are created upon initialization|
-|.sessionTTL|0|Long|Session time to live in milliseconds|
+|debug|false|Boolean|true, false|
+|builtinEvents|All amp built-in events|List|Events that are created upon initialization|
+|sessionTTL|15 minutes|Long|Session time to live in milliseconds|
+|sessionLifetime|24 hours|Long|Session lifetime in milliseconds|
 
 ## Usage
 There are many ways in which you will want to use Amp.  You may want to track how often each Activity is typically visited in your application or how far down a scrollable view your user scrolls.  If your application requires sign up and registration, you may want to track the number of taps on the sign up button because you may want to increase your user's sign up rate using Amp.  The possibilities are endless, and with Amp, not only will it track whatever you ask of it, it will also check the context in which these events occurred.  With this information, Amp will make the best decisions to improve upon whatever business goals you have.
