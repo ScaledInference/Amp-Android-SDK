@@ -5,7 +5,7 @@
 Android Client for Amp.ai.
 
 ## Amp.ai
-Amp.ai is a cloud AI platform that can enhance any software application that integrates with it  by making intelligent, goal-driven, context-sensitive decisions. Think of it as A/B testing on steroids.  While A/B testing provides information about what choice to take across all users, Amp.ai will provide you with a decision that is specific to a context and will continue to improve and provide your users with the best decision based on the context they are in.
+Amp.ai is a cloud AI platform that can enhance any software application that integrates with it by making intelligent, goal-driven, context-sensitive decisions. Think of it as A/B testing on steroids.  While A/B testing provides information about what choice to take across all users, Amp.ai will provide you with a decision that is specific to a context and will continue to improve and provide your users with the best decision based on the context they are in.
 
 ## Compatibility
 The Amp framework supports Android API level 14 and above and requires compatibility with Java 7.
@@ -73,7 +73,7 @@ Map<String, Object> properties = new HashMap<>();
 properties.put("amount", amount);
 amp.observe("CheckoutAmount", properties);
 ```
-Most likely, you will want to include `observe` events to capture metrics (that measures how well your application is to your business goals) or the contexts that are relevant to them.  You would place this within action or delegate methods to capture events or at the startup of your app to capture contexts which will help to improve upon your business goals.
+Most likely, you will want to include `observe` events to capture user context prior to decision-making and metrics. You would place this within action or delegate methods to capture events or at the startup of your app to capture contexts which will help to improve upon your business goals.
 
 ### Decide
 ``` Java
@@ -86,7 +86,7 @@ candidates.put("font", fontOptions);
 
 Map<String, Object> decision = amp.decide("CheckoutButtonStyle", candidates);
 ```
-Learning to make decisions to improve your metric is the key value Amp provides.  Simply list the candidates, e.g. the style of the button, that are likely to make a difference for your metric, and Amp will help you learn from your data and make the best decision!
+Learning to make decisions to improve your metric is the key value Amp provides. Simply define the candidates, e.g. the style of the button, that are likely to make a difference for your metric, and Amp will help you learn from your data and make the best decision!
 
 ### LoadRules
 Use this when you need to ensure that decisions made through `Amp#decide()` are made based on the rules provided by the server. A common use case is when a one-time decision must be made on start of the application. If the rules are already available, the callback will be called immediately from this method. If the rules are not ready, it will wait for the sync to complete and callback will be executed.
@@ -121,7 +121,7 @@ By default, when using the amp-android client, we will observe general session i
 |.sessionTTL|0|Long|Session time to live in milliseconds|
 
 ## Usage
-There are many ways in which you will want to use Amp.  You may want to track how often each Activity is typically visited in your application or how far down a scrollable view your user scrolls.  If your application requires sign up and registration, you may want to track the number of taps on the sign up button because you may want to increase your user's sign up rate using Amp.  The possibilities are endless, and with Amp, not only will it track whatever you ask of it, it will also check the context in which these events occurred.  With this information, Amp will make the best decisions to improve upon whatever business goals you have.
+There are many ways in which you will want to use Amp.  You may want to track how often each Activity is typically visited in your application or how far down a scrollable view your user scrolls.  If your application requires sign up and registration, you may want to track the occurrence of taps on the sign up button because you may want to increase your user's sign up rate using Amp.  The possibilities are endless, and with Amp, not only will it track whatever you ask of it, it will also check the context in which these events occurred.  With this information, Amp will make the best decisions to improve upon whatever business goals you have.
 Below are just a few examples on how you might make `observe` and `decide` requests in your application.
 
 ### Observe Usages
