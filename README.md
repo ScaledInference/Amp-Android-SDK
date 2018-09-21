@@ -29,7 +29,7 @@ allprojects {
 ### Add the dependency
 ``` Gradle
 dependencies {
-    compile 'com.github.ScaledInference:amp-android:1.0.8'
+    compile 'com.github.ScaledInference:amp-android:1.1.0'
 }
 ```
 
