@@ -1,11 +1,11 @@
-# amp-android
+# Amp-Android
 <sup>by Scaled Inference</sup>
 
 <br>
 Android Client for Amp.ai.
 
 ## Amp.ai
-Amp.ai is a cloud AI platform that can enhance any software application that integrates with it by making intelligent, goal-driven, context-sensitive decisions. Think of it as A/B testing on steroids.  While A/B testing provides information about what choice to take across all users, Amp.ai will provide you with a decision that is specific to a context and will continue to improve and provide your users with the best decision based on the context they are in.
+Amp.ai is a cloud AI platform that can enhance any software application that integrates with it by making intelligent, goal-driven, context-sensitive decisions. Think of it as A/B testing on steroids. While A/B testing provides information about what choice to take across all users, Amp.ai will provide you with a decision that is specific to a context and will continue to improve and provide your users with the best decision based on the context they are in.
 
 ## Compatibility
 The Amp framework supports Android API level 14 and above and requires compatibility with Java 7.
@@ -41,7 +41,7 @@ dependencies {
 ## Amp
 
 ### Initialization
-To use amp, import the Amp framework and create an amp instance with this class. Here is an example of initializing Amp in your `Application`:
+To use amp, import the Amp framework and create an amp instance with this class. The Amp instance should be created at the application startup to handle session lifecycle properly. Here is an example of initializing Amp in your `Application`:
 
 ``` Java
 import amp.core.Amp;
@@ -65,28 +65,36 @@ In your AndroidManifest.xml:
 ``` Manifest
 <application android:name="com.yourapp.MyApplication"/>
 ```
-These lines initialize the amp and session instances that represent a single session in the Amp project corresponding to the `projectKey` that will be given to you. How to define a user session is completely up to you. The default behavior is to end the session after inactivity period (the app in background state and no events were fired) becomes more than `sessionTTL`, or time interval since session creation is more than `sessionLifetime`.
+These lines initialize the amp and session instances that represent a single session in the Amp project corresponding to the `projectKey` that will be given to you. How to define a user session is completely up to you. Please see [this section](#session) for detailed information.
 
-### Observe
+### Context
+Observe the context by sending events to Amp.ai. Events in a session that precede a decision point form the "context" for that decision. Amp automatically discovers relevant contexts for decisions as the data evolves, and does so continuously. You have the option of sending additional context by explicitly using the 'observe' API call. For example, a business-specific context could be a Customer context, with a property, "type", and a value of "Free" or "Premium".
+
 ``` Java
 Map<String, Object> properties = new HashMap<>();
-properties.put("amount", amount);
-amp.observe("CheckoutAmount", properties);
+properties.put("type", "Premium");
+amp.observe("Customer", properties);
 ```
-Most likely, you will want to include `observe` events to capture user context prior to decision-making and metrics. You would place this within action or delegate methods to capture events or at the startup of your app to capture contexts which will help to improve upon your business goals.
 
 ### Decide
+Leverage the power of Amp.ai by invoking the `decide` API call. The call consists of decision candidates that are presented to Amp. The first candidate in the list is treated by Amp as the `default`, and this decision would be used in the baseline group. Amp will pick the decision that results in maximizing the probability of improving your business metrics. For example, users in Japan using the Chrome browser may prefer to purchase ice-cream instead of chocolate. Amp would learn this behavior as it observes that this user segment typically chooses this action and results in improved sales.
+
 ``` Java
-List<Object> colorOptions = Arrays.asList("blue", "green", "orange");
-List<Object> fontOptions = Arrays.asList(12, 14, 16);
-
+List<Object> choiceOptions = Arrays.asList("Chocolate", "Ice Cream", "Cookies");
 Map<String, List<Object>> candidates = new HashMap<>();
-candidates.put("color", colorOptions);
-candidates.put("font", fontOptions);
+candidates.put("choice", choiceOptions);
 
-Map<String, Object> decision = amp.decide("CheckoutButtonStyle", candidates);
+Map<String, Object> decision = amp.decide("Snack", candidates);
 ```
-Learning to make decisions to improve your metric is the key value Amp provides. Simply define the candidates, e.g. the style of the button, that are likely to make a difference for your metric, and Amp will help you learn from your data and make the best decision!
+
+### Outcome
+The outcome is simply the business metric you are optimizing for. Amp can optimize multiple metrics simultaneously. Once the metric has been defined, Amp.ai is informed of the outcome by an `observe` call.
+
+``` Java
+amp.observe("Sale", new HashMap<>());
+```
+
+## Advanced settings
 
 ### LoadRules
 Use this when you need to ensure that decisions made through `Amp#decide()` are made based on the rules provided by the server. A common use case is when a one-time decision must be made on start of the application. If the rules are already available, the callback will be called immediately from this method. If the rules are not ready, it will wait for the sync to complete and callback will be executed.
@@ -109,10 +117,20 @@ amp.loadRules(timeout, new CoreAmp.CompletionListener() {
 });
 ```
 
+### Session
+
+The default behavior is to end the session after inactivity period (the app in background state and no events were fired) becomes more than `sessionTTL`, or time interval since session creation is more than `sessionLifetime`.
+`sessionTTL`, `sessionLifetime` could be set up during amp initialization. You could also explicitly finish the current session and and start a new one using the following method:
+
+``` Java
+amp.startNewSession();
+```
+
 ### Builtin Events
 By default, when using the amp-android client, we will observe general session information on the `AmpSession` event.
 
 ### Configuration Options
+The following options are available. 
 
 |Name|Default Value|Data Type|Details|
 |----|:-----------:|:-------:|-------|
