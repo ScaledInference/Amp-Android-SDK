@@ -29,7 +29,7 @@ allprojects {
 ### Add the dependency
 ``` Gradle
 dependencies {
-    compile 'com.github.ScaledInference:amp-android:1.1.3'
+    compile 'com.github.ScaledInference:amp-android:1.1.5'
 }
 ```
 
@@ -138,6 +138,25 @@ The following options are available.
 |builtinEvents|All amp built-in events|List|Events that are created upon initialization|
 |sessionTTL|15 minutes|Long|Session time to live in milliseconds|
 |sessionLifetime|24 hours|Long|Session lifetime in milliseconds|
+
+### Preview mode
+
+When it’s time to test the variants of the decision call, the preview mode will help to do just that. When enabled, it will allow preselecting the result of the next decide call. Note: don’t use it in the release version, as it’s only for testing.
+
+To turn on the preview mode, enable it in the Amp config:
+
+```
+Config config = new Config.Builder()
+       .setPreviewOn(true)
+       .build();
+Amp amp = new Amp(this, PROJECT_KEY, config);
+``` 
+
+Here is how it will look:
+![Preview mode](preview.png)
+
+
+
 
 ## Usage
 There are many ways in which you will want to use Amp.  You may want to track how often each Activity is typically visited in your application or how far down a scrollable view your user scrolls.  If your application requires sign up and registration, you may want to track the occurrence of taps on the sign up button because you may want to increase your user's sign up rate using Amp.  The possibilities are endless, and with Amp, not only will it track whatever you ask of it, it will also check the context in which these events occurred.  With this information, Amp will make the best decisions to improve upon whatever business goals you have.
